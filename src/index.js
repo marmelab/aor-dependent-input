@@ -3,7 +3,7 @@ import PropTypes from 'proptypes';
 import { connect } from 'react-redux';
 import { formValueSelector, getFormValues } from 'redux-form';
 import get from 'lodash.get';
-import { Labeled } from 'admin-on-rest';
+import FormField from 'admin-on-rest/lib/mui/form/FormField';
 
 const REDUX_FORM_NAME = 'record-form';
 
@@ -19,12 +19,21 @@ const getValue = (value, path) => {
     return value;
 };
 
-export const mapStateToPropsFactory = (source, value) => state => {
-    // source is a validator function, call it with the current form values
-    if (typeof source === 'function') {
-        const values = getFormValues(REDUX_FORM_NAME)(state);
+const DependentInputComponent = ({ children, show, source, value, resolve, ...props }) =>
+    show ? <FormField input={children} {...props} /> : null;
 
-        return { show: source(values) };
+DependentInputComponent.propTypes = {
+    children: PropTypes.node.isRequired,
+    show: PropTypes.bool.isRequired,
+    source: PropTypes.any,
+    value: PropTypes.any,
+    resolve: PropTypes.func,
+};
+
+export const mapStateToProps = (state, { resolve, source, value }) => {
+    if (resolve && (source === null || typeof source === 'undefined')) {
+        const values = getFormValues(REDUX_FORM_NAME)(state);
+        return { show: resolve(values) };
     }
 
     let formValue;
@@ -36,14 +45,14 @@ export const mapStateToPropsFactory = (source, value) => state => {
         formValue = formValueSelector(REDUX_FORM_NAME)(state, source);
     }
 
+    if (resolve) {
+        return { show: resolve(formValue, source) };
+    }
+
     if (Array.isArray(source) && Array.isArray(value)) {
         return {
             show: source.reduce((acc, s, index) => acc && get(formValue, s) === value[index], true),
         };
-    }
-
-    if (typeof value === 'function') {
-        return { show: value(formValue, source) };
     }
 
     if (typeof value === 'undefined') {
@@ -59,40 +68,4 @@ export const mapStateToPropsFactory = (source, value) => state => {
     return { show: formValue === value };
 };
 
-export default (source, value) => Component => {
-    // Mimic the addLabel functionality of the Admin-on-rest FormField component
-    // Otherwise, when the component is hidden, its label would be displayed anyway
-    const addLabel = Component.defaultProps.addLabel;
-
-    const DependantInputComponent = ({ show, ...props }) => {
-        if (!show) return null;
-
-        if (addLabel) {
-            return (
-                <Labeled {...props}>
-                    <Component {...props} />
-                </Labeled>
-            );
-        }
-
-        return <Component {...props} />;
-    };
-
-    DependantInputComponent.propTypes = {
-        show: PropTypes.bool.isRequired,
-    };
-
-    const mapStateToProps = mapStateToPropsFactory(source, value);
-    const FinalComponent = connect(mapStateToProps)(DependantInputComponent);
-
-    FinalComponent.propTypes = {
-        ...Component.propTypes,
-    };
-
-    FinalComponent.defaultProps = {
-        ...Component.defaultProps,
-        addLabel: false,
-    };
-
-    return FinalComponent;
-};
+export default connect(mapStateToProps)(DependentInputComponent);

@@ -1,30 +1,24 @@
 import expect, { createSpy } from 'expect';
-import { mapStateToPropsFactory } from './index';
+import { mapStateToProps } from './index';
 
-describe('withDependency', () => {
-    describe('mapStateToProps', () => {
-        describe('with validator function', () => {
-            it('returns { show: false } if the validator returns false', () => {
-                const validator = createSpy().andReturn(false);
-                const mapStateToProps = mapStateToPropsFactory(validator);
-
-                expect(mapStateToProps()).toEqual({ show: false });
-            });
-
-            it('returns { show: true } if the validator returns true', () => {
-                const validator = createSpy().andReturn(true);
-                const mapStateToProps = mapStateToPropsFactory(validator);
-
-                expect(mapStateToProps()).toEqual({ show: true });
-            });
+describe('mapStateToProps', () => {
+    describe('with resolve function', () => {
+        it('returns { show: false } if the resolve returns false', () => {
+            const resolve = createSpy().andReturn(false);
+            expect(mapStateToProps({}, { resolve })).toEqual({ show: false });
         });
 
-        describe('with only source specified as a string', () => {
-            it('returns { show: false } if the form does not have a truthy value for the field matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory('firstName');
+        it('returns { show: true } if the resolve returns true', () => {
+            const resolve = createSpy().andReturn(true);
+            expect(mapStateToProps({}, { resolve })).toEqual({ show: true });
+        });
+    });
 
-                expect(
-                    mapStateToProps({
+    describe('with only source specified as a string', () => {
+        it('returns { show: false } if the form does not have a truthy value for the field matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -32,15 +26,18 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: false });
-            });
+                    },
+                    {
+                        source: 'firstName',
+                    },
+                ),
+            ).toEqual({ show: false });
+        });
 
-            it('returns { show: true } if the form has a truthy value for the field matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory('firstName');
-
-                expect(
-                    mapStateToProps({
+        it('returns { show: true } if the form has a truthy value for the field matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -48,17 +45,18 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: true });
-            });
+                    },
+                    { source: 'firstName' },
+                ),
+            ).toEqual({ show: true });
         });
+    });
 
-        describe('with only source specified as a deep path string', () => {
-            it('returns { show: false } if the form does not have a truthy value for the field matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory('author.firstName');
-
-                expect(
-                    mapStateToProps({
+    describe('with only source specified as a deep path string', () => {
+        it('returns { show: false } if the form does not have a truthy value for the field matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -68,15 +66,16 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: false });
-            });
+                    },
+                    { source: 'author.firstName' },
+                ),
+            ).toEqual({ show: false });
+        });
 
-            it('returns { show: true } if the form has a truthy value for the field matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory('author.firstName');
-
-                expect(
-                    mapStateToProps({
+        it('returns { show: true } if the form has a truthy value for the field matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -86,17 +85,18 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: true });
-            });
+                    },
+                    { source: 'author.firstName' },
+                ),
+            ).toEqual({ show: true });
         });
+    });
 
-        describe('with source specified as a string and a specific value', () => {
-            it('returns { show: false } if the form does not have the specific value for the field matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory('firstName', 'foo');
-
-                expect(
-                    mapStateToProps({
+    describe('with source specified as a string and a specific value', () => {
+        it('returns { show: false } if the form does not have the specific value for the field matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -104,15 +104,16 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: false });
-            });
+                    },
+                    { source: 'firstName', value: 'foo' },
+                ),
+            ).toEqual({ show: false });
+        });
 
-            it('returns { show: true } if the form have the specific value for the field matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory('firstName', 'foo');
-
-                expect(
-                    mapStateToProps({
+        it('returns { show: true } if the form have the specific value for the field matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -120,17 +121,18 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: true });
-            });
+                    },
+                    { source: 'firstName', value: 'foo' },
+                ),
+            ).toEqual({ show: true });
         });
+    });
 
-        describe('with source specified as a string and a function as value', () => {
-            it('returns { show: false } if the value function returns false', () => {
-                const mapStateToProps = mapStateToPropsFactory('firstName', value => value === 'foo');
-
-                expect(
-                    mapStateToProps({
+    describe('with source specified as a string and resolve', () => {
+        it('returns { show: false } if the resolve function returns false', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -138,15 +140,16 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: false });
-            });
+                    },
+                    { source: 'firstName', resolve: value => value === 'foo' },
+                ),
+            ).toEqual({ show: false });
+        });
 
-            it('returns { show: true } if the value function returns true', () => {
-                const mapStateToProps = mapStateToPropsFactory('firstName', value => value === 'foo');
-
-                expect(
-                    mapStateToProps({
+        it('returns { show: true } if the resolve function returns true', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -154,17 +157,18 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: true });
-            });
+                    },
+                    { source: 'firstName', resolve: value => value === 'foo' },
+                ),
+            ).toEqual({ show: true });
         });
+    });
 
-        describe('with only source specified as an array', () => {
-            it('returns { show: false } if the form does not have a truthy value for the fields matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory(['firstName', 'lastName']);
-
-                expect(
-                    mapStateToProps({
+    describe('with only source specified as an array', () => {
+        it('returns { show: false } if the form does not have a truthy value for the fields matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -172,15 +176,16 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: false });
-            });
+                    },
+                    { source: ['firstName', 'lastName'] },
+                ),
+            ).toEqual({ show: false });
+        });
 
-            it('returns { show: true } if the form has a truthy value for the fields matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory(['firstName', 'lastName']);
-
-                expect(
-                    mapStateToProps({
+        it('returns { show: true } if the form has a truthy value for the fields matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -189,17 +194,18 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: true });
-            });
+                    },
+                    { source: ['firstName', 'lastName'] },
+                ),
+            ).toEqual({ show: true });
         });
+    });
 
-        describe('with only source specified as an array with deep path strings', () => {
-            it('returns { show: false } if the form does not have a truthy value for the fields matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory(['author.firstName', 'date']);
-
-                expect(
-                    mapStateToProps({
+    describe('with only source specified as an array with deep path strings', () => {
+        it('returns { show: false } if the form does not have a truthy value for the fields matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -210,15 +216,16 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: false });
-            });
+                    },
+                    { source: ['author.firstName', 'date'] },
+                ),
+            ).toEqual({ show: false });
+        });
 
-            it('returns { show: true } if the form has a truthy value for the fields matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory(['author.firstName', 'date']);
-
-                expect(
-                    mapStateToProps({
+        it('returns { show: true } if the form has a truthy value for the fields matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -229,17 +236,18 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: true });
-            });
+                    },
+                    { source: ['author.firstName', 'date'] },
+                ),
+            ).toEqual({ show: true });
         });
+    });
 
-        describe('with source specified as an array and specific values as an array', () => {
-            it('returns { show: false } if the form does not have the specific values for the fields matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory(['author.firstName', 'category'], ['foo', 'bar']);
-
-                expect(
-                    mapStateToProps({
+    describe('with source specified as an array and specific values as an array', () => {
+        it('returns { show: false } if the form does not have the specific values for the fields matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -250,15 +258,19 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: false });
-            });
+                    },
+                    {
+                        source: ['author.firstName', 'category'],
+                        value: ['foo', 'bar'],
+                    },
+                ),
+            ).toEqual({ show: false });
+        });
 
-            it('returns { show: true } if the form have the specific values for the fields matching source', () => {
-                const mapStateToProps = mapStateToPropsFactory(['author.firstName', 'category'], ['foo', 'bar']);
-
-                expect(
-                    mapStateToProps({
+        it('returns { show: true } if the form have the specific values for the fields matching source', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -269,19 +281,21 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: true });
-            });
+                    },
+                    {
+                        source: ['author.firstName', 'category'],
+                        value: ['foo', 'bar'],
+                    },
+                ),
+            ).toEqual({ show: true });
         });
+    });
 
-        describe('with source specified as an array and a function as value', () => {
-            it('returns { show: false } if the value function returns false', () => {
-                const mapStateToProps = mapStateToPropsFactory(['author.firstName', 'category'], values => {
-                    return values.author.firstName === 'foo' && values.category === 'bar';
-                });
-
-                expect(
-                    mapStateToProps({
+    describe('with source specified as an array and resolve', () => {
+        it('returns { show: false } if the resolve function returns false', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -292,17 +306,21 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: false });
-            });
+                    },
+                    {
+                        source: ['author.firstName', 'category'],
+                        resolve: values => {
+                            return values.author.firstName === 'foo' && values.category === 'bar';
+                        },
+                    },
+                ),
+            ).toEqual({ show: false });
+        });
 
-            it('returns { show: true } if the value function returns true', () => {
-                const mapStateToProps = mapStateToPropsFactory(['author.firstName', 'category'], values => {
-                    return values.author.firstName === 'foo' && values.category === 'bar';
-                });
-
-                expect(
-                    mapStateToProps({
+        it('returns { show: true } if the resolve function returns true', () => {
+            expect(
+                mapStateToProps(
+                    {
                         form: {
                             'record-form': {
                                 values: {
@@ -313,9 +331,15 @@ describe('withDependency', () => {
                                 },
                             },
                         },
-                    }),
-                ).toEqual({ show: true });
-            });
+                    },
+                    {
+                        source: ['author.firstName', 'category'],
+                        resolve: values => {
+                            return values.author.firstName === 'foo' && values.category === 'bar';
+                        },
+                    },
+                ),
+            ).toEqual({ show: true });
         });
     });
 });
