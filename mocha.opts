@@ -1,0 +1,7 @@
+--require babel-polyfill
+--compilers js:babel-core/register
+--colors
+--reporter=spec
+--timeout=5000
+--recursive
+--sort
