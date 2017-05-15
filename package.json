@@ -1,6 +1,6 @@
 {
   "name": "aor-dependent-input",
-  "version": "0.0.10",
+  "version": "0.0.1",
   "description": "A input wrapper for inputs depending on other form values",
   "main": "./lib/index.js",
   "repository": "https://github.com/marmelab/aor-dependent-input.git",
