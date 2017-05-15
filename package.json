@@ -1,7 +1,7 @@
 {
   "name": "aor-dependent-input",
   "version": "0.0.1",
-  "description": "A input wrapper for inputs depending on other form values",
+  "description": "A component for displaying input depending on other inputs values in Admin-on-rest",
   "main": "./lib/index.js",
   "repository": "https://github.com/marmelab/aor-dependent-input.git",
   "authors": [
