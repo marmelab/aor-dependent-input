@@ -6,7 +6,7 @@ A component for displaying input depending on other inputs values in [Admin-on-r
 
 - [Installation](#installation)
 - [Usage](#installation)
-- [Options](#options)
+- [API](#api)
 
 ## Installation
 
