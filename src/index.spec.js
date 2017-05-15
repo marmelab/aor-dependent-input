@@ -14,8 +14,8 @@ describe('mapStateToProps', () => {
         });
     });
 
-    describe('with only source specified as a string', () => {
-        it('returns { show: false } if the form does not have a truthy value for the field matching source', () => {
+    describe('with only dependsOn specified as a string', () => {
+        it('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -28,13 +28,13 @@ describe('mapStateToProps', () => {
                         },
                     },
                     {
-                        source: 'firstName',
+                        dependsOn: 'firstName',
                     },
                 ),
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form has a truthy value for the field matching source', () => {
+        it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -46,14 +46,14 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: 'firstName' },
+                    { dependsOn: 'firstName' },
                 ),
             ).toEqual({ show: true });
         });
     });
 
-    describe('with only source specified as a deep path string', () => {
-        it('returns { show: false } if the form does not have a truthy value for the field matching source', () => {
+    describe('with only dependsOn specified as a deep path string', () => {
+        it('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -67,12 +67,12 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: 'author.firstName' },
+                    { dependsOn: 'author.firstName' },
                 ),
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form has a truthy value for the field matching source', () => {
+        it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -86,14 +86,14 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: 'author.firstName' },
+                    { dependsOn: 'author.firstName' },
                 ),
             ).toEqual({ show: true });
         });
     });
 
-    describe('with source specified as a string and a specific value', () => {
-        it('returns { show: false } if the form does not have the specific value for the field matching source', () => {
+    describe('with dependsOn specified as a string and a specific value', () => {
+        it('returns { show: false } if the form does not have the specific value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -105,12 +105,12 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: 'firstName', value: 'foo' },
+                    { dependsOn: 'firstName', value: 'foo' },
                 ),
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form have the specific value for the field matching source', () => {
+        it('returns { show: true } if the form have the specific value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -122,13 +122,13 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: 'firstName', value: 'foo' },
+                    { dependsOn: 'firstName', value: 'foo' },
                 ),
             ).toEqual({ show: true });
         });
     });
 
-    describe('with source specified as a string and resolve', () => {
+    describe('with dependsOn specified as a string and resolve', () => {
         it('returns { show: false } if the resolve function returns false', () => {
             expect(
                 mapStateToProps(
@@ -141,7 +141,7 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: 'firstName', resolve: value => value === 'foo' },
+                    { dependsOn: 'firstName', resolve: value => value === 'foo' },
                 ),
             ).toEqual({ show: false });
         });
@@ -158,14 +158,14 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: 'firstName', resolve: value => value === 'foo' },
+                    { dependsOn: 'firstName', resolve: value => value === 'foo' },
                 ),
             ).toEqual({ show: true });
         });
     });
 
-    describe('with only source specified as an array', () => {
-        it('returns { show: false } if the form does not have a truthy value for the fields matching source', () => {
+    describe('with only dependsOn specified as an array', () => {
+        it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -177,12 +177,12 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: ['firstName', 'lastName'] },
+                    { dependsOn: ['firstName', 'lastName'] },
                 ),
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form has a truthy value for the fields matching source', () => {
+        it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -195,14 +195,14 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: ['firstName', 'lastName'] },
+                    { dependsOn: ['firstName', 'lastName'] },
                 ),
             ).toEqual({ show: true });
         });
     });
 
-    describe('with only source specified as an array with deep path strings', () => {
-        it('returns { show: false } if the form does not have a truthy value for the fields matching source', () => {
+    describe('with only dependsOn specified as an array with deep path strings', () => {
+        it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -217,12 +217,12 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: ['author.firstName', 'date'] },
+                    { dependsOn: ['author.firstName', 'date'] },
                 ),
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form has a truthy value for the fields matching source', () => {
+        it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -237,14 +237,14 @@ describe('mapStateToProps', () => {
                             },
                         },
                     },
-                    { source: ['author.firstName', 'date'] },
+                    { dependsOn: ['author.firstName', 'date'] },
                 ),
             ).toEqual({ show: true });
         });
     });
 
-    describe('with source specified as an array and specific values as an array', () => {
-        it('returns { show: false } if the form does not have the specific values for the fields matching source', () => {
+    describe('with dependsOn specified as an array and specific values as an array', () => {
+        it('returns { show: false } if the form does not have the specific values for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -260,14 +260,14 @@ describe('mapStateToProps', () => {
                         },
                     },
                     {
-                        source: ['author.firstName', 'category'],
+                        dependsOn: ['author.firstName', 'category'],
                         value: ['foo', 'bar'],
                     },
                 ),
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form have the specific values for the fields matching source', () => {
+        it('returns { show: true } if the form have the specific values for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -283,7 +283,7 @@ describe('mapStateToProps', () => {
                         },
                     },
                     {
-                        source: ['author.firstName', 'category'],
+                        dependsOn: ['author.firstName', 'category'],
                         value: ['foo', 'bar'],
                     },
                 ),
@@ -291,7 +291,7 @@ describe('mapStateToProps', () => {
         });
     });
 
-    describe('with source specified as an array and resolve', () => {
+    describe('with dependsOn specified as an array and resolve', () => {
         it('returns { show: false } if the resolve function returns false', () => {
             expect(
                 mapStateToProps(
@@ -308,7 +308,7 @@ describe('mapStateToProps', () => {
                         },
                     },
                     {
-                        source: ['author.firstName', 'category'],
+                        dependsOn: ['author.firstName', 'category'],
                         resolve: values => {
                             return values.author.firstName === 'foo' && values.category === 'bar';
                         },
@@ -333,7 +333,7 @@ describe('mapStateToProps', () => {
                         },
                     },
                     {
-                        source: ['author.firstName', 'category'],
+                        dependsOn: ['author.firstName', 'category'],
                         resolve: values => {
                             return values.author.firstName === 'foo' && values.category === 'bar';
                         },

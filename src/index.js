@@ -19,46 +19,46 @@ const getValue = (value, path) => {
     return value;
 };
 
-const DependentInputComponent = ({ children, show, source, value, resolve, ...props }) =>
+const DependentInputComponent = ({ children, show, dependsOn, value, resolve, ...props }) =>
     show ? <FormField input={children} {...props} /> : null;
 
 DependentInputComponent.propTypes = {
     children: PropTypes.node.isRequired,
     show: PropTypes.bool.isRequired,
-    source: PropTypes.any,
+    dependsOn: PropTypes.any,
     value: PropTypes.any,
     resolve: PropTypes.func,
 };
 
-export const mapStateToProps = (state, { resolve, source, value }) => {
-    if (resolve && (source === null || typeof source === 'undefined')) {
+export const mapStateToProps = (state, { resolve, dependsOn, value }) => {
+    if (resolve && (dependsOn === null || typeof dependsOn === 'undefined')) {
         const values = getFormValues(REDUX_FORM_NAME)(state);
         return { show: resolve(values) };
     }
 
     let formValue;
     // get the current form values from redux-form
-    if (Array.isArray(source)) {
+    if (Array.isArray(dependsOn)) {
         // We have to destructure the array here as redux-form does not accept an array of fields
-        formValue = formValueSelector(REDUX_FORM_NAME)(state, ...source);
+        formValue = formValueSelector(REDUX_FORM_NAME)(state, ...dependsOn);
     } else {
-        formValue = formValueSelector(REDUX_FORM_NAME)(state, source);
+        formValue = formValueSelector(REDUX_FORM_NAME)(state, dependsOn);
     }
 
     if (resolve) {
-        return { show: resolve(formValue, source) };
+        return { show: resolve(formValue, dependsOn) };
     }
 
-    if (Array.isArray(source) && Array.isArray(value)) {
+    if (Array.isArray(dependsOn) && Array.isArray(value)) {
         return {
-            show: source.reduce((acc, s, index) => acc && get(formValue, s) === value[index], true),
+            show: dependsOn.reduce((acc, s, index) => acc && get(formValue, s) === value[index], true),
         };
     }
 
     if (typeof value === 'undefined') {
-        if (Array.isArray(source)) {
+        if (Array.isArray(dependsOn)) {
             return {
-                show: source.reduce((acc, s) => acc && !!getValue(formValue, s), true),
+                show: dependsOn.reduce((acc, s) => acc && !!getValue(formValue, s), true),
             };
         }
 
