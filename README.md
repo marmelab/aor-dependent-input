@@ -24,7 +24,7 @@ yarn add aor-dependent-input
 
 ## Usage
 
-Check that the source field has a value (a truthy value):
+Check that the field specified by `dependsOn` has a value (a truthy value):
 
 ```js
 import DependentInput from 'aor-dependent-input';
@@ -35,7 +35,7 @@ export const UserCreate = (props) => (
             <TextInput source="firstName" />
             <TextInput source="lastName" />
             <BooleanInput source="hasEmail" label="Has email ?" />
-            <DependentInput source="hasEmail">
+            <DependentInput dependsOn="hasEmail">
                 <TextInput source="email" />
             </DependentInput>
         </SimpleForm>
@@ -43,7 +43,7 @@ export const UserCreate = (props) => (
 );
 ```
 
-Check that the source field has a specific value:
+Check that the field specified by `dependsOn` has a specific value:
 
 ```js
 import DependentInput from 'aor-dependent-input';
@@ -59,7 +59,7 @@ export const PostCreate = (props) => (
                 { id: 'photography', name: 'Photography' },
             ]} />
 
-            <DependentInput source="category" value="programming">
+            <DependentInput dependsOn="category" value="programming">
                 <SelectInput source="subcategory" choices={[
                     { id: 'js', name: 'JavaScript' },
                     { id: 'net', name: '.NET' },
@@ -67,13 +67,13 @@ export const PostCreate = (props) => (
                 ]} />
             </DependentInput>
 
-            <DependentInput source="category" value="lifestyle">
+            <DependentInput dependsOn="category" value="lifestyle">
                 <SelectInput source="subcategory" choices={[
                     ...
                 ]} />
             </DependentInput>
 
-            <DependentInput source="category" value="photography">
+            <DependentInput dependsOn="category" value="photography">
                 <SelectInput source="subcategory" choices={[
                     ...
                 ]} />
@@ -83,7 +83,7 @@ export const PostCreate = (props) => (
 );
 ```
 
-Check that the source field matches a custom constraint:
+Check that the field specified by `dependsOn` matches a custom constraint:
 
 ```js
 import DependentInput from 'aor-dependent-input';
@@ -102,7 +102,7 @@ export const PostCreate = (props) => (
                     { id: 'photography', name: 'Photography' },
             ]} />
 
-            <DependentInput source="category" resolve={checkCustomConstraint}>
+            <DependentInput dependsOn="category" resolve={checkCustomConstraint}>
                 <SelectInput source="subcategory" choices={[
                     { id: 'js', name: 'JavaScript' },
                     { id: 'net', name: '.NET' },
@@ -139,7 +139,7 @@ export const UserCreate = (props) => (
 
 The `DependentInput` accepts the following props:
 
-### source
+### dependsOn
 
 Either a string indicating the name of the field to check (eg: `hasEmail`) or an array of fields to check (eg: `['firstName', 'lastName']`).
 
@@ -147,9 +147,9 @@ Either a string indicating the name of the field to check (eg: `hasEmail`) or an
 
 ### value
 
-If not specified, `DependentInput` will only check that the source or sources have a truthy value.
+If not specified, `DependentInput` will only check that the field(s) specified by `dependsOn` have a truthy value.
 
-You may specify a single value or an array of values. Deep path sources will be correctly retrieved and compared to the specified values.
+You may specify a single value or an array of values. Deep paths will be correctly retrieved and compared to the specified values.
 
 If both `value` and `record` are specified, `value` will be ignored.
 
@@ -157,15 +157,15 @@ If both `value` and `record` are specified, `value` will be ignored.
 
 The `resolve` prop accepts a function which must return either `true` to display the child input or `false` to hide it.
 
-If the `source` prop is specified, `resolve` will be called with either the source value (when a single field name was specified as `source`) or with an object matching the specified paths.
+If the `dependsOn` prop is specified, `resolve` will be called with either the value of the field specified by `dependsOn` (when a single field name was specified as `dependsOn`) or with an object matching the specified paths.
 
-**Note**: When specifying deep paths (eg: `author.firstName`), `redux-form` will return an object with a matching structure. For example, when passing `['author.firstName', 'author.lastName']` as source, the `value` function will be passed the following object:
+**Note**: When specifying deep paths (eg: `author.firstName`), `redux-form` will return an object with a matching structure. For example, when passing `['author.firstName', 'author.lastName']` as `dependsOn`, the `value` function will be passed the following object:
 
 ```js
 { author: { firstName: 'bValue', lastName: 'cValue' } }
 ```
 
-If `source` is not specified, `resolve` will be called with the current form values (full record).
+If `dependsOn` is not specified, `resolve` will be called with the current form values (full record).
 
 If both `value` and `record` are specified, `value` will be ignored.
 
