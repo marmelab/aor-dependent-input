@@ -101,7 +101,7 @@ export const PostCreate = (props) => (
 );
 ```
 
-All powers! Check wether the current full record matches your constraints:
+All powers! Check whether the current full record matches your constraints:
 
 ```js
 const EmailInput = withDependency((record) => record.firstName && record.lastName)(SelectInput);
