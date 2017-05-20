@@ -20,7 +20,7 @@ const getValue = (value, path) => {
 };
 
 const DependentInputComponent = ({ children, show, dependsOn, value, resolve, ...props }) =>
-    show ? <FormField input={children} {...props} /> : null;
+    show ? <FormField input={React.Children.only(children)} {...props} /> : null;
 
 DependentInputComponent.propTypes = {
     children: PropTypes.node.isRequired,

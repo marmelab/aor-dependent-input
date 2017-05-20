@@ -139,6 +139,10 @@ export const UserCreate = (props) => (
 
 The `DependentInput` accepts the following props:
 
+### children
+
+This component expects to receive a single React element child.
+
 ### dependsOn
 
 Either a string indicating the name of the field to check (eg: `hasEmail`) or an array of fields to check (eg: `['firstName', 'lastName']`).
