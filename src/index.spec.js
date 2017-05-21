@@ -359,12 +359,15 @@ describe('<DependentInput />', () => {
     it('returns a unique FormField element when passed a unique child', () => {
         const wrapper = shallow(
             <DependentInput show={true}>
-                <span />
+                <span source="aSource" />
             </DependentInput>,
         );
 
-        expect(wrapper.at(0).name()).toEqual('FormField');
-        expect(wrapper.at(0).prop('input')).toEqual(<span />);
+        expect(wrapper.name()).toEqual('div');
+        expect(wrapper.prop('className')).toEqual('aor-input-aSource');
+        const formFields = wrapper.find('FormField');
+        expect(formFields.length).toEqual(1);
+        expect(formFields.at(0).prop('input')).toEqual(<span source="aSource" />);
     });
 
     it('returns a span with FormField children for each passed child', () => {
