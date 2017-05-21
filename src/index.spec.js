@@ -1,5 +1,7 @@
+import React from 'react';
 import expect, { createSpy } from 'expect';
-import { mapStateToProps } from './index';
+import { shallow } from 'enzyme';
+import { DependentInputComponent as DependentInput, mapStateToProps } from './index';
 
 describe('mapStateToProps', () => {
     describe('with resolve function', () => {
@@ -341,5 +343,45 @@ describe('mapStateToProps', () => {
                 ),
             ).toEqual({ show: true });
         });
+    });
+});
+
+describe('<DependentInput />', () => {
+    it('returns null when show prop is false', () => {
+        const wrapper = shallow(
+            <DependentInput show={false}>
+                <span />
+            </DependentInput>,
+        );
+        expect(wrapper.type() === null);
+    });
+
+    it('returns a unique FormField element when passed a unique child', () => {
+        const wrapper = shallow(
+            <DependentInput show={true}>
+                <span />
+            </DependentInput>,
+        );
+
+        expect(wrapper.at(0).name()).toEqual('FormField');
+        expect(wrapper.at(0).prop('input')).toEqual(<span />);
+    });
+
+    it('returns a span with FormField children for each passed child', () => {
+        const wrapper = shallow(
+            <DependentInput show={true}>
+                <span className="1" />
+                <span className="2" />
+                <span className="3" />
+            </DependentInput>,
+        );
+
+        expect(wrapper.at(0).type()).toEqual('span');
+        const formFields = wrapper.find('FormField');
+        expect(formFields.length).toEqual(3);
+
+        expect(formFields.at(0).prop('input')).toEqual(<span className="1" />);
+        expect(formFields.at(1).prop('input')).toEqual(<span className="2" />);
+        expect(formFields.at(2).prop('input')).toEqual(<span className="3" />);
     });
 });
