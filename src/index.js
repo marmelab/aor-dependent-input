@@ -26,9 +26,17 @@ export const DependentInputComponent = ({ children, show, dependsOn, value, reso
 
     if (Array.isArray(children)) {
         return (
-            <span>
-                {React.Children.map(children, child => <FormField input={child} {...props} />)}
-            </span>
+            <div>
+                {React.Children.map(children, child => (
+                    <div
+                        key={child.props.source}
+                        style={child.props.style}
+                        className={`aor-input-${child.props.source}`}
+                    >
+                        <FormField input={child} {...props} />
+                    </div>
+                ))}
+            </div>
         );
     }
 

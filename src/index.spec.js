@@ -376,7 +376,7 @@ describe('<DependentInput />', () => {
             </DependentInput>,
         );
 
-        expect(wrapper.at(0).type()).toEqual('span');
+        expect(wrapper.at(0).type()).toEqual('div');
         const formFields = wrapper.find('FormField');
         expect(formFields.length).toEqual(3);
 
