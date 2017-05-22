@@ -19,8 +19,33 @@ const getValue = (value, path) => {
     return value;
 };
 
-const DependentInputComponent = ({ children, show, dependsOn, value, resolve, ...props }) =>
-    show ? <FormField input={children} {...props} /> : null;
+export const DependentInputComponent = ({ children, show, dependsOn, value, resolve, ...props }) => {
+    if (!show) {
+        return null;
+    }
+
+    if (Array.isArray(children)) {
+        return (
+            <div>
+                {React.Children.map(children, child => (
+                    <div
+                        key={child.props.source}
+                        style={child.props.style}
+                        className={`aor-input-${child.props.source}`}
+                    >
+                        <FormField input={child} {...props} />
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    return (
+        <div key={children.props.source} style={children.props.style} className={`aor-input-${children.props.source}`}>
+            <FormField input={children} {...props} />
+        </div>
+    );
+};
 
 DependentInputComponent.propTypes = {
     children: PropTypes.node.isRequired,
