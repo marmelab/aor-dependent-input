@@ -1,7 +1,7 @@
 import React from 'react';
 import expect, { createSpy } from 'expect';
 import { shallow } from 'enzyme';
-import { DependentInputComponent as DependentInput, mapStateToProps } from './index';
+import { DependentFieldComponent as DependentField, mapStateToProps } from './DependentField';
 
 describe('mapStateToProps', () => {
     describe('with resolve function', () => {
@@ -39,16 +39,13 @@ describe('mapStateToProps', () => {
         it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    firstName: 'blublu',
-                                },
-                            },
+                        dependsOn: 'firstName',
+                        record: {
+                            firstName: 'blublu',
                         },
                     },
-                    { dependsOn: 'firstName' },
                 ),
             ).toEqual({ show: true });
         });
@@ -58,18 +55,15 @@ describe('mapStateToProps', () => {
         it('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    author: {
-                                        lastName: 'blublu',
-                                    },
-                                },
+                        dependsOn: 'author.firstName',
+                        record: {
+                            author: {
+                                lastName: 'blublu',
                             },
                         },
                     },
-                    { dependsOn: 'author.firstName' },
                 ),
             ).toEqual({ show: false });
         });
@@ -77,18 +71,15 @@ describe('mapStateToProps', () => {
         it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    author: {
-                                        firstName: 'blublu',
-                                    },
-                                },
+                        dependsOn: 'author.firstName',
+                        record: {
+                            author: {
+                                firstName: 'blublu',
                             },
                         },
                     },
-                    { dependsOn: 'author.firstName' },
                 ),
             ).toEqual({ show: true });
         });
@@ -98,16 +89,14 @@ describe('mapStateToProps', () => {
         it('returns { show: false } if the form does not have the specific value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    firstName: 'bar',
-                                },
-                            },
+                        dependsOn: 'firstName',
+                        value: 'foo',
+                        record: {
+                            firstName: 'bar',
                         },
                     },
-                    { dependsOn: 'firstName', value: 'foo' },
                 ),
             ).toEqual({ show: false });
         });
@@ -115,52 +104,14 @@ describe('mapStateToProps', () => {
         it('returns { show: true } if the form have the specific value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    firstName: 'foo',
-                                },
-                            },
+                        dependsOn: 'firstName',
+                        value: 'foo',
+                        record: {
+                            firstName: 'foo',
                         },
                     },
-                    { dependsOn: 'firstName', value: 'foo' },
-                ),
-            ).toEqual({ show: true });
-        });
-    });
-
-    describe('with dependsOn specified as a string and resolve', () => {
-        it('returns { show: false } if the resolve function returns false', () => {
-            expect(
-                mapStateToProps(
-                    {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    firstName: 'bar',
-                                },
-                            },
-                        },
-                    },
-                    { dependsOn: 'firstName', resolve: value => value === 'foo' },
-                ),
-            ).toEqual({ show: false });
-        });
-
-        it('returns { show: true } if the resolve function returns true', () => {
-            expect(
-                mapStateToProps(
-                    {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    firstName: 'foo',
-                                },
-                            },
-                        },
-                    },
-                    { dependsOn: 'firstName', resolve: value => value === 'foo' },
                 ),
             ).toEqual({ show: true });
         });
@@ -170,16 +121,13 @@ describe('mapStateToProps', () => {
         it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    lastName: 'blublu',
-                                },
-                            },
+                        dependsOn: ['firstName', 'lastName'],
+                        record: {
+                            lastName: 'blublu',
                         },
                     },
-                    { dependsOn: ['firstName', 'lastName'] },
                 ),
             ).toEqual({ show: false });
         });
@@ -187,17 +135,14 @@ describe('mapStateToProps', () => {
         it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    firstName: 'blublu',
-                                    lastName: 'blublu',
-                                },
-                            },
+                        dependsOn: ['firstName', 'lastName'],
+                        record: {
+                            firstName: 'blublu',
+                            lastName: 'blublu',
                         },
                     },
-                    { dependsOn: ['firstName', 'lastName'] },
                 ),
             ).toEqual({ show: true });
         });
@@ -207,19 +152,16 @@ describe('mapStateToProps', () => {
         it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    date: new Date().toDateString(),
-                                    author: {
-                                        lastName: 'blublu',
-                                    },
-                                },
+                        dependsOn: ['author.firstName', 'date'],
+                        record: {
+                            date: new Date().toDateString(),
+                            author: {
+                                lastName: 'blublu',
                             },
                         },
                     },
-                    { dependsOn: ['author.firstName', 'date'] },
                 ),
             ).toEqual({ show: false });
         });
@@ -227,19 +169,16 @@ describe('mapStateToProps', () => {
         it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
+                    {},
                     {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    date: new Date().toDateString(),
-                                    author: {
-                                        firstName: 'blublu',
-                                    },
-                                },
+                        dependsOn: ['author.firstName', 'date'],
+                        record: {
+                            date: new Date().toDateString(),
+                            author: {
+                                firstName: 'blublu',
                             },
                         },
                     },
-                    { dependsOn: ['author.firstName', 'date'] },
                 ),
             ).toEqual({ show: true });
         });
@@ -249,20 +188,15 @@ describe('mapStateToProps', () => {
         it('returns { show: false } if the form does not have the specific values for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
-                    {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    category: 'bar',
-                                    author: {
-                                        firstName: 'bar',
-                                    },
-                                },
-                            },
-                        },
-                    },
+                    {},
                     {
                         dependsOn: ['author.firstName', 'category'],
+                        record: {
+                            category: 'bar',
+                            author: {
+                                firstName: 'bar',
+                            },
+                        },
                         value: ['foo', 'bar'],
                     },
                 ),
@@ -272,20 +206,15 @@ describe('mapStateToProps', () => {
         it('returns { show: true } if the form have the specific values for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
-                    {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    category: 'bar',
-                                    author: {
-                                        firstName: 'foo',
-                                    },
-                                },
-                            },
-                        },
-                    },
+                    {},
                     {
                         dependsOn: ['author.firstName', 'category'],
+                        record: {
+                            category: 'bar',
+                            author: {
+                                firstName: 'foo',
+                            },
+                        },
                         value: ['foo', 'bar'],
                     },
                 ),
@@ -297,20 +226,16 @@ describe('mapStateToProps', () => {
         it('returns { show: false } if the resolve function returns false', () => {
             expect(
                 mapStateToProps(
-                    {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    category: 'bar',
-                                    author: {
-                                        firstName: 'bar',
-                                    },
-                                },
-                            },
-                        },
-                    },
+                    {},
                     {
                         dependsOn: ['author.firstName', 'category'],
+                        record: {
+                            category: 'bar',
+                            author: {
+                                firstName: 'bar',
+                                lastName: 'bar',
+                            },
+                        },
                         resolve: values => {
                             return values.author.firstName === 'foo' && values.category === 'bar';
                         },
@@ -322,20 +247,16 @@ describe('mapStateToProps', () => {
         it('returns { show: true } if the resolve function returns true', () => {
             expect(
                 mapStateToProps(
-                    {
-                        form: {
-                            'record-form': {
-                                values: {
-                                    category: 'bar',
-                                    author: {
-                                        firstName: 'foo',
-                                    },
-                                },
-                            },
-                        },
-                    },
+                    {},
                     {
                         dependsOn: ['author.firstName', 'category'],
+                        record: {
+                            category: 'bar',
+                            author: {
+                                firstName: 'foo',
+                                lastName: 'bar',
+                            },
+                        },
                         resolve: values => {
                             return values.author.firstName === 'foo' && values.category === 'bar';
                         },
@@ -346,21 +267,21 @@ describe('mapStateToProps', () => {
     });
 });
 
-describe('<DependentInput />', () => {
+describe('<DependentField />', () => {
     it('returns null when show prop is false', () => {
         const wrapper = shallow(
-            <DependentInput show={false}>
+            <DependentField show={false}>
                 <span />
-            </DependentInput>,
+            </DependentField>,
         );
         expect(wrapper.type() === null);
     });
 
     it('returns a unique FormField element when passed a unique child', () => {
         const wrapper = shallow(
-            <DependentInput show={true}>
+            <DependentField show={true}>
                 <span source="aSource" />
-            </DependentInput>,
+            </DependentField>,
         );
 
         expect(wrapper.name()).toEqual('div');
@@ -372,11 +293,11 @@ describe('<DependentInput />', () => {
 
     it('returns a span with FormField children for each passed child', () => {
         const wrapper = shallow(
-            <DependentInput show={true}>
+            <DependentField show={true}>
                 <span className="1" />
                 <span className="2" />
                 <span className="3" />
-            </DependentInput>,
+            </DependentField>,
         );
 
         expect(wrapper.at(0).type()).toEqual('div');
