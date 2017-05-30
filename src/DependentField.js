@@ -4,18 +4,7 @@ import { connect } from 'react-redux';
 import get from 'lodash.get';
 import set from 'lodash.set';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
-
-const getValue = (value, path) => {
-    if (path.includes('.')) {
-        return get(value, path);
-    }
-
-    if (typeof value === 'object') {
-        return get(value, path);
-    }
-
-    return value;
-};
+import getValue from './getValue';
 
 export const DependentFieldComponent = ({ children, show, dependsOn, value, resolve, ...props }) => {
     if (!show) {

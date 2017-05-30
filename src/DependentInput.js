@@ -4,20 +4,9 @@ import { connect } from 'react-redux';
 import { formValueSelector, getFormValues } from 'redux-form';
 import get from 'lodash.get';
 import FormField from 'admin-on-rest/lib/mui/form/FormField';
+import getValue from './getValue';
 
 const REDUX_FORM_NAME = 'record-form';
-
-const getValue = (value, path) => {
-    if (path.includes('.')) {
-        return get(value, path);
-    }
-
-    if (typeof value === 'object') {
-        return get(value, path);
-    }
-
-    return value;
-};
 
 export const DependentInputComponent = ({ children, show, dependsOn, value, resolve, ...props }) => {
     if (!show) {
