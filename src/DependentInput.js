@@ -60,7 +60,10 @@ export const mapStateToProps = (state, { resolve, dependsOn, value }) => {
     }
 
     if (resolve) {
-        return { show: resolve(formValue, dependsOn) };
+        return {
+            dependsOnValue: formValue,
+            show: resolve(formValue, dependsOn),
+        };
     }
 
     if (Array.isArray(dependsOn) && Array.isArray(value)) {
