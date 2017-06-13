@@ -47,7 +47,7 @@ DependentInputComponent.propTypes = {
 export const mapStateToProps = (state, { resolve, dependsOn, value }) => {
     if (resolve && (dependsOn === null || typeof dependsOn === 'undefined')) {
         const values = getFormValues(REDUX_FORM_NAME)(state);
-        return { show: resolve(values) };
+        return { dependsOnValue: values, show: resolve(values, dependsOn, value) };
     }
 
     let formValue;
@@ -65,6 +65,7 @@ export const mapStateToProps = (state, { resolve, dependsOn, value }) => {
 
     if (Array.isArray(dependsOn) && Array.isArray(value)) {
         return {
+            dependsOnValue: formValue,
             show: dependsOn.reduce((acc, s, index) => acc && get(formValue, s) === value[index], true),
         };
     }
@@ -72,14 +73,15 @@ export const mapStateToProps = (state, { resolve, dependsOn, value }) => {
     if (typeof value === 'undefined') {
         if (Array.isArray(dependsOn)) {
             return {
+                dependsOnValue: formValue,
                 show: dependsOn.reduce((acc, s) => acc && !!getValue(formValue, s), true),
             };
         }
 
-        return { show: !!formValue };
+        return { dependsOnValue: formValue, show: !!formValue };
     }
 
-    return { show: formValue === value };
+    return { dependsOnValue: formValue, show: formValue === value };
 };
 
 export default connect(mapStateToProps)(DependentInputComponent);
