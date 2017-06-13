@@ -169,6 +169,49 @@ If `dependsOn` is not specified, `resolve` will be called with the current form 
 
 If both `value` and `resolve` are specified, `value` will be ignored.
 
+## Re-rendering the DependentInput children when the values of the dependencies change
+
+This could be necessary to implement cascaded select. For example, a song may have a genre and a sub genre, which are retrieved with calls to an external service not hosted in our API.
+This is how we could display only the sub genres for the selected genre:
+
+```js
+// in SubGenreInput.js
+import React, { Component } from 'react';
+import { translate, SelectInput } from 'admin-on-rest';
+import fetchSubGenres from './fetchSubGenres';
+
+class SubGenreInput extends Component {
+    state = {
+        subgenres: [],
+    }
+
+    componentDidMount() {
+        this.fetchData(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.dependsOnValue !== this.props.dependsOnValue) {
+            this.fetchData(nextProps);
+        }
+    }
+
+    fetchData(props) {
+        fetchSubGenres(props.dependsOnValue).then(subgenres => {
+            this.setState({ subgenres });
+        })
+    }
+
+    render() {
+        return <SelectInput {...this.props} choices={this.state.subgenres} />
+    }
+}
+
+SubGenreInput.propTypes = SelectInput.propTypes;
+SubGenreInput.defaultProps = SelectInput.defaultProps;
+
+export default SubGenreInput;
+```
+
 ## Contributing
 
 Run the tests with this command:

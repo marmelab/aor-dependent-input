@@ -7,12 +7,48 @@ describe('mapStateToProps', () => {
     describe('with resolve function', () => {
         it('returns { show: false } if the resolve returns false', () => {
             const resolve = createSpy().andReturn(false);
-            expect(mapStateToProps({}, { resolve })).toEqual({ show: false });
+            expect(
+                mapStateToProps(
+                    {
+                        form: {
+                            'record-form': {
+                                values: {
+                                    lastName: 'blublu',
+                                },
+                            },
+                        },
+                    },
+                    { resolve },
+                ),
+            ).toEqual({
+                show: false,
+                dependsOnValue: {
+                    lastName: 'blublu',
+                },
+            });
         });
 
         it('returns { show: true } if the resolve returns true', () => {
             const resolve = createSpy().andReturn(true);
-            expect(mapStateToProps({}, { resolve })).toEqual({ show: true });
+            expect(
+                mapStateToProps(
+                    {
+                        form: {
+                            'record-form': {
+                                values: {
+                                    lastName: 'blublu',
+                                },
+                            },
+                        },
+                    },
+                    { resolve },
+                ),
+            ).toEqual({
+                show: true,
+                dependsOnValue: {
+                    lastName: 'blublu',
+                },
+            });
         });
     });
 
@@ -33,7 +69,7 @@ describe('mapStateToProps', () => {
                         dependsOn: 'firstName',
                     },
                 ),
-            ).toEqual({ show: false });
+            ).toEqual({ show: false, dependsOnValue: undefined });
         });
 
         it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
@@ -50,7 +86,7 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: 'firstName' },
                 ),
-            ).toEqual({ show: true });
+            ).toEqual({ show: true, dependsOnValue: 'blublu' });
         });
     });
 
@@ -71,7 +107,7 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: 'author.firstName' },
                 ),
-            ).toEqual({ show: false });
+            ).toEqual({ show: false, dependsOnValue: undefined });
         });
 
         it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
@@ -90,7 +126,7 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: 'author.firstName' },
                 ),
-            ).toEqual({ show: true });
+            ).toEqual({ show: true, dependsOnValue: 'blublu' });
         });
     });
 
@@ -109,7 +145,7 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: 'firstName', value: 'foo' },
                 ),
-            ).toEqual({ show: false });
+            ).toEqual({ show: false, dependsOnValue: 'bar' });
         });
 
         it('returns { show: true } if the form have the specific value for the field matching dependsOn', () => {
@@ -126,7 +162,7 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: 'firstName', value: 'foo' },
                 ),
-            ).toEqual({ show: true });
+            ).toEqual({ show: true, dependsOnValue: 'foo' });
         });
     });
 
@@ -145,7 +181,7 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: 'firstName', resolve: value => value === 'foo' },
                 ),
-            ).toEqual({ show: false });
+            ).toEqual({ show: false, dependsOnValue: 'bar' });
         });
 
         it('returns { show: true } if the resolve function returns true', () => {
@@ -162,7 +198,7 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: 'firstName', resolve: value => value === 'foo' },
                 ),
-            ).toEqual({ show: true });
+            ).toEqual({ show: true, dependsOnValue: 'foo' });
         });
     });
 
@@ -181,7 +217,12 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: ['firstName', 'lastName'] },
                 ),
-            ).toEqual({ show: false });
+            ).toEqual({
+                show: false,
+                dependsOnValue: {
+                    lastName: 'blublu',
+                },
+            });
         });
 
         it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
@@ -199,11 +240,19 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: ['firstName', 'lastName'] },
                 ),
-            ).toEqual({ show: true });
+            ).toEqual({
+                show: true,
+                dependsOnValue: {
+                    firstName: 'blublu',
+                    lastName: 'blublu',
+                },
+            });
         });
     });
 
     describe('with only dependsOn specified as an array with deep path strings', () => {
+        const date = new Date().toDateString();
+
         it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
@@ -211,7 +260,7 @@ describe('mapStateToProps', () => {
                         form: {
                             'record-form': {
                                 values: {
-                                    date: new Date().toDateString(),
+                                    date,
                                     author: {
                                         lastName: 'blublu',
                                     },
@@ -221,7 +270,10 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: ['author.firstName', 'date'] },
                 ),
-            ).toEqual({ show: false });
+            ).toEqual({
+                show: false,
+                dependsOnValue: { date },
+            });
         });
 
         it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
@@ -231,7 +283,7 @@ describe('mapStateToProps', () => {
                         form: {
                             'record-form': {
                                 values: {
-                                    date: new Date().toDateString(),
+                                    date,
                                     author: {
                                         firstName: 'blublu',
                                     },
@@ -241,7 +293,15 @@ describe('mapStateToProps', () => {
                     },
                     { dependsOn: ['author.firstName', 'date'] },
                 ),
-            ).toEqual({ show: true });
+            ).toEqual({
+                show: true,
+                dependsOnValue: {
+                    date,
+                    author: {
+                        firstName: 'blublu',
+                    },
+                },
+            });
         });
     });
 
@@ -266,7 +326,15 @@ describe('mapStateToProps', () => {
                         value: ['foo', 'bar'],
                     },
                 ),
-            ).toEqual({ show: false });
+            ).toEqual({
+                show: false,
+                dependsOnValue: {
+                    category: 'bar',
+                    author: {
+                        firstName: 'bar',
+                    },
+                },
+            });
         });
 
         it('returns { show: true } if the form have the specific values for the fields matching dependsOn', () => {
@@ -289,7 +357,15 @@ describe('mapStateToProps', () => {
                         value: ['foo', 'bar'],
                     },
                 ),
-            ).toEqual({ show: true });
+            ).toEqual({
+                show: true,
+                dependsOnValue: {
+                    category: 'bar',
+                    author: {
+                        firstName: 'foo',
+                    },
+                },
+            });
         });
     });
 
@@ -316,7 +392,15 @@ describe('mapStateToProps', () => {
                         },
                     },
                 ),
-            ).toEqual({ show: false });
+            ).toEqual({
+                show: false,
+                dependsOnValue: {
+                    category: 'bar',
+                    author: {
+                        firstName: 'bar',
+                    },
+                },
+            });
         });
 
         it('returns { show: true } if the resolve function returns true', () => {
@@ -341,7 +425,15 @@ describe('mapStateToProps', () => {
                         },
                     },
                 ),
-            ).toEqual({ show: true });
+            ).toEqual({
+                show: true,
+                dependsOnValue: {
+                    category: 'bar',
+                    author: {
+                        firstName: 'foo',
+                    },
+                },
+            });
         });
     });
 });

@@ -45,7 +45,7 @@ DependentFieldComponent.propTypes = {
 
 export const mapStateToProps = (state, { record, resolve, dependsOn, value }) => {
     if (resolve && (dependsOn === null || typeof dependsOn === 'undefined')) {
-        return { show: resolve(record, dependsOn) };
+        return { show: resolve(record, dependsOn, value) };
     }
 
     if (resolve && !Array.isArray(dependsOn)) {
