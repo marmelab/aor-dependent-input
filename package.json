@@ -55,6 +55,6 @@
     "proptypes": "~1.0.0"
   },
   "peerDependencies": {
-    "admin-on-rest": "~0.9.1"
+    "admin-on-rest": "~1.0.2"
   }
 }
