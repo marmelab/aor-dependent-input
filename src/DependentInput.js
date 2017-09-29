@@ -16,15 +16,15 @@ export const DependentInputComponent = ({ children, show, dependsOn, value, reso
     if (Array.isArray(children)) {
         return (
             <div>
-                {React.Children.map(children, child => (
+                {React.Children.map(children, child =>
                     <div
                         key={child.props.source}
                         style={child.props.style}
                         className={`aor-input-${child.props.source}`}
                     >
                         <FormField input={child} {...props} />
-                    </div>
-                ))}
+                    </div>,
+                )}
             </div>
         );
     }
@@ -42,11 +42,12 @@ DependentInputComponent.propTypes = {
     dependsOn: PropTypes.any,
     value: PropTypes.any,
     resolve: PropTypes.func,
+    formName: PropTypes.string,
 };
 
-export const mapStateToProps = (state, { resolve, dependsOn, value }) => {
+export const mapStateToProps = (state, { resolve, dependsOn, value, formName = REDUX_FORM_NAME }) => {
     if (resolve && (dependsOn === null || typeof dependsOn === 'undefined')) {
-        const values = getFormValues(REDUX_FORM_NAME)(state);
+        const values = getFormValues(formName)(state);
         return { dependsOnValue: values, show: resolve(values, dependsOn, value) };
     }
 
@@ -54,9 +55,9 @@ export const mapStateToProps = (state, { resolve, dependsOn, value }) => {
     // get the current form values from redux-form
     if (Array.isArray(dependsOn)) {
         // We have to destructure the array here as redux-form does not accept an array of fields
-        formValue = formValueSelector(REDUX_FORM_NAME)(state, ...dependsOn);
+        formValue = formValueSelector(formName)(state, ...dependsOn);
     } else {
-        formValue = formValueSelector(REDUX_FORM_NAME)(state, dependsOn);
+        formValue = formValueSelector(formName)(state, dependsOn);
     }
 
     if (resolve) {
