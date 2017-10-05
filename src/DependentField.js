@@ -14,15 +14,15 @@ export const DependentFieldComponent = ({ children, show, dependsOn, value, reso
     if (Array.isArray(children)) {
         return (
             <div>
-                {React.Children.map(children, child =>
+                {React.Children.map(children, child => (
                     <div
                         key={child.props.source}
                         style={child.props.style}
                         className={`aor-input-${child.props.source}`}
                     >
                         <FormField input={child} {...props} />
-                    </div>,
-                )}
+                    </div>
+                ))}
             </div>
         );
     }
