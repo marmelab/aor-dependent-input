@@ -1,23 +1,23 @@
 import React from 'react';
-import expect, { createSpy } from 'expect';
+import expect from 'expect';
 import { shallow } from 'enzyme';
 import { DependentFieldComponent as DependentField, mapStateToProps } from './DependentField';
 
 describe('mapStateToProps', () => {
     describe('with resolve function', () => {
-        it('returns { show: false } if the resolve returns false', () => {
-            const resolve = createSpy().andReturn(false);
+        test('returns { show: false } if the resolve returns false', () => {
+            const resolve = jest.fn(() => false);
             expect(mapStateToProps({}, { resolve })).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the resolve returns true', () => {
-            const resolve = createSpy().andReturn(true);
+        test('returns { show: true } if the resolve returns true', () => {
+            const resolve = jest.fn(() => true);
             expect(mapStateToProps({}, { resolve })).toEqual({ show: true });
         });
     });
 
     describe('with only dependsOn specified as a string', () => {
-        it('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
+        test('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -36,7 +36,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
+        test('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -52,7 +52,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with only dependsOn specified as a deep path string', () => {
-        it('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
+        test('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -68,7 +68,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
+        test('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -86,7 +86,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with dependsOn specified as a string and a specific value', () => {
-        it('returns { show: false } if the form does not have the specific value for the field matching dependsOn', () => {
+        test('returns { show: false } if the form does not have the specific value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -101,7 +101,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form have the specific value for the field matching dependsOn', () => {
+        test('returns { show: true } if the form have the specific value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -118,7 +118,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with only dependsOn specified as an array', () => {
-        it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
+        test('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -132,7 +132,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
+        test('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -149,7 +149,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with only dependsOn specified as an array with deep path strings', () => {
-        it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
+        test('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -166,7 +166,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
+        test('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -185,7 +185,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with dependsOn specified as an array and specific values as an array', () => {
-        it('returns { show: false } if the form does not have the specific values for the fields matching dependsOn', () => {
+        test('returns { show: false } if the form does not have the specific values for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -203,7 +203,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the form have the specific values for the fields matching dependsOn', () => {
+        test('returns { show: true } if the form have the specific values for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -223,7 +223,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with dependsOn specified as an array and resolve', () => {
-        it('returns { show: false } if the resolve function returns false', () => {
+        test('returns { show: false } if the resolve function returns false', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -244,7 +244,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false });
         });
 
-        it('returns { show: true } if the resolve function returns true', () => {
+        test('returns { show: true } if the resolve function returns true', () => {
             expect(
                 mapStateToProps(
                     {},
@@ -268,7 +268,7 @@ describe('mapStateToProps', () => {
 });
 
 describe('<DependentField />', () => {
-    it('returns null when show prop is false', () => {
+    test('returns null when show prop is false', () => {
         const wrapper = shallow(
             <DependentField show={false}>
                 <span />
@@ -277,7 +277,7 @@ describe('<DependentField />', () => {
         expect(wrapper.type() === null);
     });
 
-    it('returns a unique FormField element when passed a unique child', () => {
+    test('returns a unique FormField element when passed a unique child', () => {
         const wrapper = shallow(
             <DependentField show={true}>
                 <span source="aSource" />
@@ -291,7 +291,7 @@ describe('<DependentField />', () => {
         expect(formFields.at(0).prop('input')).toEqual(<span source="aSource" />);
     });
 
-    it('returns a span with FormField children for each passed child', () => {
+    test('returns a span with FormField children for each passed child', () => {
         const wrapper = shallow(
             <DependentField show={true}>
                 <span className="1" />

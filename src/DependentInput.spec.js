@@ -1,12 +1,12 @@
 import React from 'react';
-import expect, { createSpy } from 'expect';
+import expect from 'expect';
 import { shallow } from 'enzyme';
 import { DependentInputComponent as DependentInput, mapStateToProps } from './DependentInput';
 
 describe('mapStateToProps', () => {
     describe('with resolve function', () => {
-        it('returns { show: false } if the resolve returns false', () => {
-            const resolve = createSpy().andReturn(false);
+        test('returns { show: false } if the resolve returns false', () => {
+            const resolve = jest.fn(() => false);
             expect(
                 mapStateToProps(
                     {
@@ -28,8 +28,8 @@ describe('mapStateToProps', () => {
             });
         });
 
-        it('returns { show: true } if the resolve returns true', () => {
-            const resolve = createSpy().andReturn(true);
+        test('returns { show: true } if the resolve returns true', () => {
+            const resolve = jest.fn(() => true);
             expect(
                 mapStateToProps(
                     {
@@ -53,7 +53,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with only dependsOn specified as a string', () => {
-        it('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
+        test('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -72,7 +72,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false, dependsOnValue: undefined });
         });
 
-        it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
+        test('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -91,7 +91,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with only dependsOn specified as a deep path string', () => {
-        it('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
+        test('returns { show: false } if the form does not have a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -110,7 +110,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false, dependsOnValue: undefined });
         });
 
-        it('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
+        test('returns { show: true } if the form has a truthy value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -131,7 +131,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with dependsOn specified as a string and a specific value', () => {
-        it('returns { show: false } if the form does not have the specific value for the field matching dependsOn', () => {
+        test('returns { show: false } if the form does not have the specific value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -148,7 +148,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false, dependsOnValue: 'bar' });
         });
 
-        it('returns { show: true } if the form have the specific value for the field matching dependsOn', () => {
+        test('returns { show: true } if the form have the specific value for the field matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -167,7 +167,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with dependsOn specified as a string and resolve', () => {
-        it('returns { show: false } if the resolve function returns false', () => {
+        test('returns { show: false } if the resolve function returns false', () => {
             expect(
                 mapStateToProps(
                     {
@@ -184,7 +184,7 @@ describe('mapStateToProps', () => {
             ).toEqual({ show: false, dependsOnValue: 'bar' });
         });
 
-        it('returns { show: true } if the resolve function returns true', () => {
+        test('returns { show: true } if the resolve function returns true', () => {
             expect(
                 mapStateToProps(
                     {
@@ -203,7 +203,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with only dependsOn specified as an array', () => {
-        it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
+        test('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -225,7 +225,7 @@ describe('mapStateToProps', () => {
             });
         });
 
-        it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
+        test('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -253,7 +253,7 @@ describe('mapStateToProps', () => {
     describe('with only dependsOn specified as an array with deep path strings', () => {
         const date = new Date().toDateString();
 
-        it('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
+        test('returns { show: false } if the form does not have a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -276,7 +276,7 @@ describe('mapStateToProps', () => {
             });
         });
 
-        it('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
+        test('returns { show: true } if the form has a truthy value for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -306,7 +306,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with dependsOn specified as an array and specific values as an array', () => {
-        it('returns { show: false } if the form does not have the specific values for the fields matching dependsOn', () => {
+        test('returns { show: false } if the form does not have the specific values for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -337,7 +337,7 @@ describe('mapStateToProps', () => {
             });
         });
 
-        it('returns { show: true } if the form have the specific values for the fields matching dependsOn', () => {
+        test('returns { show: true } if the form have the specific values for the fields matching dependsOn', () => {
             expect(
                 mapStateToProps(
                     {
@@ -370,7 +370,7 @@ describe('mapStateToProps', () => {
     });
 
     describe('with dependsOn specified as an array and resolve', () => {
-        it('returns { show: false } if the resolve function returns false', () => {
+        test('returns { show: false } if the resolve function returns false', () => {
             expect(
                 mapStateToProps(
                     {
@@ -403,7 +403,7 @@ describe('mapStateToProps', () => {
             });
         });
 
-        it('returns { show: true } if the resolve function returns true', () => {
+        test('returns { show: true } if the resolve function returns true', () => {
             expect(
                 mapStateToProps(
                     {
@@ -439,7 +439,7 @@ describe('mapStateToProps', () => {
 });
 
 describe('<DependentInput />', () => {
-    it('returns null when show prop is false', () => {
+    test('returns null when show prop is false', () => {
         const wrapper = shallow(
             <DependentInput show={false}>
                 <span />
@@ -448,7 +448,7 @@ describe('<DependentInput />', () => {
         expect(wrapper.type() === null);
     });
 
-    it('returns a unique FormField element when passed a unique child', () => {
+    test('returns a unique FormField element when passed a unique child', () => {
         const wrapper = shallow(
             <DependentInput show={true}>
                 <span source="aSource" />
@@ -462,7 +462,7 @@ describe('<DependentInput />', () => {
         expect(formFields.at(0).prop('input')).toEqual(<span source="aSource" />);
     });
 
-    it('returns a span with FormField children for each passed child', () => {
+    test('returns a span with FormField children for each passed child', () => {
         const wrapper = shallow(
             <DependentInput show={true}>
                 <span className="1" />

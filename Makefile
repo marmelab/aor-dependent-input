@@ -23,18 +23,11 @@ watch: ## continuously compile ES6 files to JS
 		./src
 
 test: ## Launch unit tests
-	@NODE_ENV=test ./node_modules/.bin/nyc \
-		./node_modules/.bin/mocha \
-		--opts ./mocha.opts \
-		"./src/**/*.spec.js"
+	@NODE_ENV=test ./node_modules/.bin/jest --setupTestFrameworkScriptFile ./src/setupTests.js
 
 
 watch-test: ## Launch unit tests and watch for changes
-	@NODE_ENV=test ./node_modules/.bin/nyc \
-		./node_modules/.bin/mocha \
-		--opts ./mocha.opts \
-		--watch \
-		"./src/**/*.spec.js"
+	@NODE_ENV=test ./node_modules/.bin/jest --watch --setupTestFrameworkScriptFile ./src/setupTests.js
 
 format: ## Format the source code
 	@./node_modules/.bin/eslint --fix ./src
