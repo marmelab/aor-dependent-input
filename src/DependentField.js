@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import get from 'lodash.get';
 import set from 'lodash.set';
-import FormField from 'admin-on-rest/lib/mui/form/FormField';
+import FormField from 'react-admin/lib/mui/form/FormField';
 import getValue from './getValue';
 
 export const DependentFieldComponent = ({ children, show, dependsOn, value, resolve, ...props }) => {
@@ -18,7 +18,7 @@ export const DependentFieldComponent = ({ children, show, dependsOn, value, reso
                     <div
                         key={child.props.source}
                         style={child.props.style}
-                        className={`aor-input-${child.props.source}`}
+                        className={`ra-input-${child.props.source}`}
                     >
                         <FormField input={child} {...props} />
                     </div>
@@ -28,7 +28,7 @@ export const DependentFieldComponent = ({ children, show, dependsOn, value, reso
     }
 
     return (
-        <div key={children.props.source} style={children.props.style} className={`aor-input-${children.props.source}`}>
+        <div key={children.props.source} style={children.props.style} className={`ra-input-${children.props.source}`}>
             <FormField input={children} {...props} />
         </div>
     );
