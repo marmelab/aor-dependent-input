@@ -185,6 +185,10 @@ class SubGenreInput extends Component {
         subgenres: [],
     }
 
+    // This is necessary so that the SelectInput receive all its required props
+    // from redux-form
+    static defaultProps = { addField: true };
+
     componentDidMount() {
         this.fetchData(this.props);
     }
