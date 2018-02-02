@@ -285,8 +285,8 @@ describe('<DependentField />', () => {
         );
 
         expect(wrapper.name()).toEqual('div');
-        expect(wrapper.prop('className')).toEqual('aor-input-aSource');
-        const formFields = wrapper.find('FormField');
+        expect(wrapper.prop('className')).toEqual('ra-input-aSource');
+        const formFields = wrapper.find('Connect(FormField)');
         expect(formFields.length).toEqual(1);
         expect(formFields.at(0).prop('input')).toEqual(<span source="aSource" />);
     });
@@ -301,7 +301,7 @@ describe('<DependentField />', () => {
         );
 
         expect(wrapper.at(0).type()).toEqual('div');
-        const formFields = wrapper.find('FormField');
+        const formFields = wrapper.find('Connect(FormField)');
         expect(formFields.length).toEqual(3);
 
         expect(formFields.at(0).prop('input')).toEqual(<span className="1" />);
